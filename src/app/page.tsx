@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { notes, accidentals, modes, progressionPatterns, type Note } from "@/lib/mockData";
 import { getHarmonicField, getProgressionChords } from "@/lib/musicEngine";
-import { getChordShape } from "@/lib/chordDb";
 import ChordDiagram from "@/components/ChordDiagram";
 
 const btnBase =
@@ -28,6 +28,7 @@ export default function Home() {
   const [selectedAccidental, setSelectedAccidental] = useState("");
   const [selectedMode, setSelectedMode] = useState("");
   const [instrument, setInstrument] = useState<"guitar" | "cavaco">("guitar");
+  const [showDiagrams, setShowDiagrams] = useState(true);
 
   const field = getHarmonicField(selectedNote, selectedAccidental, selectedMode);
   const progressions = progressionPatterns.map(p => ({
@@ -42,11 +43,12 @@ export default function Home() {
 
       <div className="flex w-full max-w-3xl flex-col items-center gap-8">
         <header className="text-center">
+          <Image src="/logo.png" alt="Logo Qual o Tom App" width={80} height={80} className="mx-auto mb-4 rounded-xl" priority />
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Toca de Ouvido App
+            Qual o Tom App
           </h1>
           <p className="mt-1 text-sm text-zinc-400 sm:text-base">
-            Campo Harmônico na sua tela
+            Seu mapa de campo harmônico e progressões
           </p>
         </header>
 
@@ -68,6 +70,22 @@ export default function Home() {
                 {inst === "guitar" ? "Violão" : "Cavaco"}
               </button>
             ))}
+          </div>
+
+          <div className="flex items-center justify-center gap-3">
+            <button
+              onClick={() => setShowDiagrams((v) => !v)}
+              className={`relative h-6 w-11 rounded-full transition-colors ${
+                showDiagrams ? "bg-orange-500" : "bg-zinc-700"
+              }`}
+            >
+              <span
+                className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                  showDiagrams ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+            <span className="text-sm text-zinc-400">Mostrar Diagramas</span>
           </div>
 
           <p className="text-sm text-zinc-400">Selecione o tom abaixo</p>
@@ -141,29 +159,36 @@ export default function Home() {
         </section>
 
         {progressions.length > 0 && (
-          <section className="flex w-full flex-col gap-4">
+          <section className="flex w-full flex-col gap-10">
             <h2 className="text-lg font-semibold text-zinc-300">Progressões</h2>
             <div className="flex flex-col gap-4 sm:flex-row">
               {progressions.map((prog) => (
                 <div
                   key={prog.name}
-                  className="flex flex-1 flex-col gap-4 rounded-xl bg-zinc-900 p-5"
+                  className="flex w-full flex-1 flex-col gap-4 rounded-xl bg-zinc-900 p-5"
                 >
                   <h3 className="text-base font-semibold text-zinc-200">
                     {prog.name}
                   </h3>
                   <p className="text-xs text-zinc-500">{prog.numerals}</p>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-row flex-wrap md:flex-nowrap gap-4 md:gap-8 items-start justify-start">
                     {prog.chords.map((chord, i) => (
                       <div key={i} className="flex flex-col items-center gap-2">
-                        <span className="text-sm font-bold text-zinc-100">
-                          {chord}
-                        </span>
-                        <ChordDiagram
-                          instrument={instrument}
-                          chordName={chord}
-                          frets={getChordShape(instrument, chord)}
-                        />
+                        {showDiagrams ? (
+                          <>
+                            <span className="text-sm font-bold text-zinc-100">
+                              {chord}
+                            </span>
+                            <ChordDiagram
+                              instrument={instrument}
+                              chordName={chord}
+                            />
+                          </>
+                        ) : (
+                          <span className="text-lg font-bold text-zinc-100">
+                            {chord}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>

@@ -15,6 +15,11 @@ export interface ProgressionPattern {
 }
 
 export const progressionPatterns: ProgressionPattern[] = [
-  { name: 'Pop', numerals: ['I', 'V', 'VIm', 'IV'] },
-  { name: 'Jazz', numerals: ['IIm7', 'V7', 'Imaj7'] },
+  { name: 'Samba/Pagode (Quadradinho)', numerals: ['I', 'VI7', 'IIm7', 'V7'] },
+  { name: 'Pop / Sertanejo Universitário', numerals: ['I', 'V', 'VIm', 'IV'] },
+  { name: 'Sofrência / Piseiro / Forró Moderno', numerals: ['VIm', 'IV', 'I', 'V'] },
+  { name: 'Brega Clássico / Jovem Guarda', numerals: ['I', 'VIm', 'IV', 'V'] },
+  { name: 'Brega Romântico / Arrocha', numerals: ['I', 'IIIm', 'IV', 'V'] },
+  { name: 'Rock', numerals: ['I', 'IV', 'V', 'IV'] },
+  { name: 'Reggae / Forró Xote Raiz', numerals: ['I', 'IV', 'I', 'IV'] },
 ]

@@ -2,6 +2,28 @@
 
 Todas as alterações notáveis neste projeto serão documentadas aqui.
 
+## [0.4.0] — 18/06/2026
+
+### Adicionado
+- Favicons (favicon.ico, favicon-16x16.png, favicon-32x32.png, icon.png, apple-touch-icon.png) com referências no metadata
+- Manifest PWA (`src/app/manifest.ts`) com ícones android-chrome-192x192 e 512x512
+- Logo (`/logo.png`) no cabeçalho da página
+- Toggle "Mostrar Diagramas" para exibir/ocultar diagramas de acordes nas progressões
+- Viewport config (`themeColor`, `initialScale`) no layout
+- Metadados SEO: keywords, applicationName, openGraph (pt_BR)
+- Acordes diminutos (dim) no banco de dados para violão e cavaco
+- Progressões de música brasileira: Samba/Pagode, Sertanejo, Sofrência/Piseiro, Brega, Rock, Reggae/Forró
+
+### Alterado
+- Rebranding: "Toca de Ouvido App" → "Qual o Tom App"
+- `chordDb.ts` refatorado: de templates com transposição para dados flat com strings CSV; cobertura expandida para todas as 12 tonalidades (maior, menor, sétima, dim)
+- `getChordShape` simplificado: retorna `string | null` (CSV) em vez de `number[] | null`
+- `ChordDiagram.tsx`: agora busca shape internamente via `getChordShape`; renderiza SVG com `viewBox` dinâmico e suporte a início em casa > 4
+- `mockData.ts`: progressões substituídas por gêneros brasileiros
+
+### Corrigido
+- Fallback de diagrama agora exibe "Diagrama não mapeado" + nome do acorde
+
 ## [0.3.0] — 17/06/2026
 
 ### Adicionado

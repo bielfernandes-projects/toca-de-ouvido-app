@@ -1,4 +1,4 @@
-# Arquitetura — Toca de Ouvido App
+# Arquitetura — Qual o Tom App
 
 ## Stack
 
@@ -8,24 +8,35 @@
 | Linguagem | TypeScript |
 | Estilo | Tailwind CSS v4 |
 | Fonte | Geist (Vercel) |
+| Icones | favicon.ico + PNG multi-size + apple-touch-icon |
 
 ## Estrutura de Pastas
 
 ```
 src/
   app/
-    globals.css      — estilos globais, dark mode (zinc-950)
-    layout.tsx       — root layout, metadata, font
-    page.tsx         — página principal (Client Component)
+    globals.css        — estilos globais, dark mode (zinc-950)
+    layout.tsx         — root layout, metadata (SEO, favicons, viewport), font
+    page.tsx           — página principal (Client Component)
+    manifest.ts        — PWA manifest (android-chrome icons)
   components/
-    ChordDiagram.tsx — SVG de diagrama de acordes (violão / cavaco)
+    ChordDiagram.tsx   — SVG de diagrama de acordes (violão / cavaco)
   lib/
-    mockData.ts      — dados estáticos (notas, acidentes, modos, patterns)
-    musicEngine.ts   — motor de teoria musical (puro TS, sem React)
-    chordDb.ts       — banco de acordes com templates + transposição
+    mockData.ts        — dados estáticos (notas, acidentes, modos, progressões brasileiras)
+    musicEngine.ts     — motor de teoria musical (puro TS, sem React)
+    chordDb.ts         — banco de acordes flat (CSV strings) para 12 tonalidades
+public/
+  favicon.ico          — favicon principal
+  favicon-16x16.png    — 16×16
+  favicon-32x32.png    — 32×32
+  icon.png             — ícone genérico 192×192
+  apple-touch-icon.png — Apple touch icon 180×180
+  android-chrome-192x192.png
+  android-chrome-512x512.png
+  logo.png             — logo do app no header
 docs/
-  ARCHITECTURE.md    — este arquivo
-  CHANGELOG.md       — histórico de alterações
+  ARCHITECTURE.md      — este arquivo
+  CHANGELOG.md         — histórico de alterações
 ```
 
 ## Fluxo de Dados
@@ -50,14 +61,14 @@ getProgressionChords(field, numerals[])
   → mapeia cada numeral romano ao chord correspondente
   → retorna string[] com os acordes da progressão
         │
-        ▼
-getChordShape(instrument, chordName)
-  → busca shape no banco (chordDb)
-  → retorna number[] ou null
+        ▼ (se showDiagrams=true)
+<ChordDiagram instrument chordName={chord} />
+  → getChordShape(instrument, chordName) internamente
+  → retorna string (CSV: "x,3,2,0,1,0") ou null
+  → renderiza SVG diagrama ou fallback "Diagrama não mapeado"
         │
-        ▼
-<ChordDiagram instrument frets={shape} />
-  → renderiza SVG diagrama (ou grid vazio se null)
+        ▼ (se showDiagrams=false)
+  → exibe apenas o nome do acorde em texto
 ```
 
 ## Motor Musical (`musicEngine.ts`)
@@ -81,6 +92,18 @@ Arquivo puramente funcional, sem dependências. Duas funções exportadas:
 4. Concatena root + sufixo (ex: `D` + `m7` → `Dm7`)
 5. Retorna `string[]`
 
+### Progressões por Gênero (`mockData.ts`)
+
+| Gênero | Graus |
+|---|---|
+| Samba/Pagode (Quadradinho) | I → VI7 → IIm7 → V7 |
+| Pop / Sertanejo Universitário | I → V → VIm → IV |
+| Sofrência / Piseiro / Forró Moderno | VIm → IV → I → V |
+| Brega Clássico / Jovem Guarda | I → VIm → IV → V |
+| Brega Romântico / Arrocha | I → IIIm → IV → V |
+| Rock | I → IV → V → IV |
+| Reggae / Forró Xote Raiz | I → IV → I → IV |
+
 ### Edge Cases Tratados
 
 | Entrada | Tratamento |
@@ -93,43 +116,47 @@ Arquivo puramente funcional, sem dependências. Duas funções exportadas:
 
 ## Banco de Acordes (`chordDb.ts`)
 
-Arquivo puro TS, sem dependências. Usa **6 templates** (violão maior/menor/sétima + cavaco maior/menor/sétima) e transpõe para as 12 notas via `findAllInKey()`, gerando **36 acordes × 2 instrumentos** automaticamente.
+Arquivo puro TS, sem dependências. Dicionário flat `Record<string, Record<string, string>>` com shapes em formato CSV (ex: `"x,3,2,0,1,0"`). Cobre **12 tonalidades** para maior, menor, sétima e dim, em violão e cavaco.
 
 ### `getChordShape(instrument, chordName)`
 
 1. Tenta lookup exato (`Dm7`)
 2. Tenta sem extensão (`Dm7` → `Dm`)
-3. Tenta só a tônica (`Dm` → `D`)
-4. Retorna `null` → componente exibe grid vazio
+3. Retorna `null` → componente exibe fallback "Diagrama não mapeado"
 
-### Templates de Forma
+### Formato das Strings
 
-| Template | Violão (referência) | Cavaco (referência) |
-|---|---|---|
-| Maior | C: x32010 | C: 2012 |
-| Menor | Am: x02210 | Dm: 2210 |
-| Sétima | E7: 020100 | C7: 0001 |
+| Símbolo | Significado |
+|---|---|
+| `0` | Corda solta |
+| `x` | Corda mutada |
+| `1`–`12` | Casa a ser pressionada |
+
+Violão: 6 valores separados por vírgula (cordas 6→1).  
+Cavaco: 4 valores (cordas 4→1).
 
 ## Componente `<ChordDiagram />`
 
-SVG puro, `96×120` px, dimensão fixa para evitar layout shift. Props:
+SVG puro, `100×120` px (`viewBox`), renderizado com `w-24 h-32` via CSS. Props:
 
 ```ts
 interface Props {
-  instrument: "guitar" | "cavaco"
+  instrument: string
   chordName: string
-  frets: number[] | null
 }
 ```
+
+O componente chama `getChordShape()` internamente. Se não encontrar shape, renderiza fallback com "Diagrama não mapeado" + nome do acorde.
 
 **Renderização:**
 1. Fundo escuro (`#27272a`) para o braço, com 4 trastes (5 linhas horizontais)
 2. Linhas verticais para cordas (6 ou 4, espaçamento proporcional)
 3. Nut (linha 0) mais grossa que as demais
-4. Se acorde inicia após casa 1: texto `nfr` no canto superior esquerdo
-5. `X` estilizado para corda mutada (-1), `O` vazado para corda solta (0)
-6. Círculos laranja (`#f97316`) nas posições dos trastes (>0)
-7. Fallback: grid vazio (sem bolinhas nem textos)
+4. Se acorde inicia após casa 1: número da casa inicial no canto superior esquerdo (sem sufixo "fr")
+5. Se acorde ultrapassa 4 casas: cálculo automático da casa inicial (`minFret`)
+6. `X` estilizado para corda mutada, `O` vazado para corda solta
+7. Círculos laranja (`#f97316`) nas posições dos trastes
+8. Fallback: div estilizada com "Diagrama não mapeado"
 
 ## Layout e Responsividade
 
@@ -137,6 +164,33 @@ interface Props {
 - **Desktop** (>= `lg`): anúncios laterais fixos (skyscraper 160×600)
 - **Mobile** (< `lg`): anúncios como banners horizontais (728×90)
 - Dark mode padrão, sem toggle (`bg-zinc-950`)
+
+## SEO e Metadados
+
+Gerenciados via `metadata` export no `layout.tsx`:
+
+| Campo | Valor |
+|---|---|
+| `title` | Qual o Tom App \| Campo Harmônico e Progressões na Prática |
+| `description` | Descubra o campo harmônico, dicionário de acordes... |
+| `keywords` | campo harmônico, qual o tom, acordes violão... |
+| `applicationName` | Qual o Tom App |
+| `openGraph` | title, description, type: website, locale: pt_BR |
+| `icons.icon` | favicon.ico (any), favicon-16x16.png, favicon-32x32.png, icon.png |
+| `icons.apple` | apple-touch-icon.png (180×180) |
+
+Viewport config exportada separadamente (`themeColor: #09090b`, `initialScale: 1`).
+
+## PWA Manifest
+
+Gerado via `src/app/manifest.ts` (rota `/manifest.webmanifest`):
+
+| Campo | Valor |
+|---|---|
+| `name` | Qual o Tom App |
+| `display` | standalone |
+| `background_color` / `theme_color` | #09090b |
+| `icons` | android-chrome-192x192.png e 512x512.png |
 
 ## Convenções de Código
 

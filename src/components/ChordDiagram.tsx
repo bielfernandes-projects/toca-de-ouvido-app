@@ -1,88 +1,76 @@
 "use client";
 
+import { getChordShape } from "@/lib/chordDb";
+
 interface Props {
-  instrument: "guitar" | "cavaco"
+  instrument: string
   chordName: string
-  frets: number[] | null
 }
 
-const STRING_COUNT = { guitar: 6, cavaco: 4 }
-const W = 96
+const STRING_COUNT: Record<string, number> = { guitar: 6, cavaco: 4 }
+const W = 100
 const H = 120
-const PAD = 8
+const PAD = 10
 const TOP = 18
-const FRET_H = 24
+const FRET_H = 22
+const FRET_COUNT = 4
 
-export default function ChordDiagram({ instrument, chordName, frets }: Props) {
-  const stringCount = STRING_COUNT[instrument]
+export default function ChordDiagram({ instrument, chordName }: Props) {
+  const shape = getChordShape(instrument, chordName)
+
+  if (!shape) {
+    return (
+      <div className="w-24 h-32 bg-zinc-900 border border-zinc-700 flex flex-col items-center justify-center text-center p-2 rounded-md">
+        <span className="text-zinc-500 text-xs mb-1">Diagrama não mapeado</span>
+        <span className="font-bold text-white">{chordName}</span>
+      </div>
+    )
+  }
+
+  const frets = shape.split(",")
+  const stringCount = STRING_COUNT[instrument] ?? 6
   const stringSpacing = (W - PAD * 2) / (stringCount - 1)
 
   const stringX = Array.from({ length: stringCount }, (_, i) =>
     Math.round(PAD + i * stringSpacing),
   )
 
-  if (!frets || frets.length === 0) {
-    return (
-      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="shrink-0">
-        <rect x={PAD} y={TOP} width={W - PAD * 2} height={FRET_H * 4} fill="#27272a" rx={2} />
-        {Array.from({ length: 5 }, (_, i) => (
-          <line
-            key={`f-${i}`}
-            x1={PAD}
-            y1={TOP + i * FRET_H}
-            x2={W - PAD}
-            y2={TOP + i * FRET_H}
-            stroke={i === 0 ? "#a1a1aa" : "#3f3f46"}
-            strokeWidth={i === 0 ? 2 : 1}
-          />
-        ))}
-        {stringX.map((x) => (
-          <line
-            key={`s-${x}`}
-            x1={x}
-            y1={TOP}
-            x2={x}
-            y2={TOP + FRET_H * 4}
-            stroke="#52525b"
-            strokeWidth={0.7}
-          />
-        ))}
-      </svg>
-    )
+  const frettedNotes = frets.filter((f) => f !== "x" && f !== "0").map(Number)
+
+  const minFret = frettedNotes.length > 0 ? Math.min(...frettedNotes) : 1
+  const maxFret = frettedNotes.length > 0 ? Math.max(...frettedNotes) : 1
+  const startFret = maxFret > FRET_COUNT ? minFret : 1
+
+  const getYDot = (fret: number) => {
+    const rel = fret - startFret + 1
+    return TOP + (rel - 1) * FRET_H + FRET_H / 2
   }
 
-  const positiveFrets = frets.filter((f) => f > 0)
-  const minFret = positiveFrets.length > 0 ? Math.min(...positiveFrets) : 1
-  const hasOpen = frets.includes(0)
-  const startFret = !hasOpen && minFret > 1 ? minFret : 1
-
-  const relativeFrets = frets.map((f) => (f > 0 ? f - (startFret - 1) : f))
-
   return (
-    <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="shrink-0">
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-24 h-32 shrink-0">
       <rect
         x={PAD}
         y={TOP}
         width={W - PAD * 2}
-        height={FRET_H * 4}
+        height={FRET_H * FRET_COUNT}
         fill="#27272a"
         rx={2}
       />
 
       {startFret > 1 && (
         <text
-          x={PAD - 2}
+          x={PAD - 3}
           y={TOP + FRET_H * 0.65}
           textAnchor="end"
           fontSize={9}
           fontWeight={600}
           fill="#a1a1aa"
         >
-          {startFret}fr
+          {startFret}
         </text>
       )}
 
-      {Array.from({ length: 5 }, (_, i) => (
+      {Array.from({ length: FRET_COUNT + 1 }, (_, i) => (
         <line
           key={`fret-${i}`}
           x1={PAD}
@@ -100,16 +88,16 @@ export default function ChordDiagram({ instrument, chordName, frets }: Props) {
           x1={x}
           y1={TOP}
           x2={x}
-          y2={TOP + FRET_H * 4}
+          y2={TOP + FRET_H * FRET_COUNT}
           stroke="#52525b"
           strokeWidth={0.7}
         />
       ))}
 
-      {relativeFrets.map((fret, i) => {
+      {frets.map((fret, i) => {
         const x = stringX[i]
 
-        if (fret === -1) {
+        if (fret === "x") {
           return (
             <text
               key={`m-${i}`}
@@ -125,7 +113,9 @@ export default function ChordDiagram({ instrument, chordName, frets }: Props) {
           )
         }
 
-        if (fret === 0) {
+        const num = Number.parseInt(fret, 10)
+
+        if (num === 0) {
           return (
             <circle
               key={`m-${i}`}
@@ -139,17 +129,20 @@ export default function ChordDiagram({ instrument, chordName, frets }: Props) {
           )
         }
 
-        const y = TOP + (fret - 1) * FRET_H + FRET_H / 2
+        if (num > 0) {
+          const y = getYDot(num)
+          return (
+            <circle
+              key={`m-${i}`}
+              cx={x}
+              cy={y}
+              r={5.5}
+              fill="#f97316"
+            />
+          )
+        }
 
-        return (
-          <circle
-            key={`m-${i}`}
-            cx={x}
-            cy={y}
-            r={5.5}
-            fill="#f97316"
-          />
-        )
+        return null
       })}
     </svg>
   )

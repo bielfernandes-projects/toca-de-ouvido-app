@@ -1,148 +1,63 @@
-type ChordShape = [number[] | null, number[] | null]
-
-const GUITAR_MAJOR_TEMPLATE: Record<string, number[]> = {
-  C: [-1, 3, 2, 0, 1, 0],
-  D: [-1, -1, 0, 2, 3, 2],
-  E: [0, 2, 2, 1, 0, 0],
-  F: [1, 3, 3, 2, 1, 1],
-  G: [3, 2, 0, 0, 0, 3],
-  A: [-1, 0, 2, 2, 2, 0],
-  B: [-1, 2, 4, 4, 4, 2],
-}
-
-const GUITAR_MINOR_TEMPLATE: Record<string, number[]> = {
-  Cm: [-1, 3, 5, 5, 4, 3],
-  Dm: [-1, -1, 0, 2, 3, 1],
-  Em: [0, 2, 2, 0, 0, 0],
-  Fm: [1, 3, 3, 1, 1, 1],
-  Gm: [3, 5, 5, 3, 3, 3],
-  Am: [-1, 0, 2, 2, 1, 0],
-  Bm: [-1, 2, 4, 4, 3, 2],
-}
-
-const GUITAR_7TH_TEMPLATE: Record<string, number[]> = {
-  C7: [-1, 3, 2, 3, 1, 0],
-  D7: [-1, -1, 0, 2, 1, 2],
-  E7: [0, 2, 2, 1, 3, 0],
-  F7: [-1, -1, 3, 2, 1, 1],
-  G7: [3, 2, 0, 0, 0, 1],
-  A7: [-1, 0, 2, 0, 2, 0],
-  B7: [-1, 2, 1, 2, 0, 2],
-}
-
-const CAVACO_MAJOR_TEMPLATE: Record<string, number[]> = {
-  C: [2, 0, 1, 2],
-  D: [2, 2, 2, 0],
-  E: [1, 4, 3, 2],
-  F: [2, 0, 1, 0],
-  G: [0, 0, 0, 0],
-  A: [2, 1, 0, 0],
-  B: [4, 2, 2, 2],
-}
-
-const CAVACO_MINOR_TEMPLATE: Record<string, number[]> = {
-  Cm: [3, 3, 3, 3],
-  Dm: [2, 2, 1, 0],
-  Em: [0, 4, 3, 2],
-  Fm: [1, 5, 4, 3],
-  Gm: [3, 0, 3, 3],
-  Am: [2, 0, 0, 0],
-  Bm: [4, 2, 2, 2],
-}
-
-const CAVACO_7TH_TEMPLATE: Record<string, number[]> = {
-  C7: [0, 0, 0, 1],
-  D7: [2, 0, 2, 0],
-  E7: [0, 4, 0, 2],
-  F7: [2, 0, 1, 3],
-  G7: [0, 0, 0, 2],
-  A7: [0, 1, 0, 0],
-  B7: [2, 2, 2, 4],
-}
-
-const CHROMATIC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-
-function transpose(shape: number[], semitones: number): number[] {
-  return shape.map((f) => {
-    if (f === -1 || f === 0) return f
-    const next = f + semitones
-    if (next > 12) return 12
-    return next
-  })
-}
-
-function findAllInKey(
-  templates: Record<string, number[]>,
-  keyNotes: string[],
-): Record<string, number[]> {
-  const result: Record<string, number[]> = {}
-  for (const templateNote of Object.keys(templates)) {
-    const templateIndex = CHROMATIC.indexOf(templateNote)
-    if (templateIndex === -1) continue
-    const shape = templates[templateNote]
-    for (const target of keyNotes) {
-      const targetIndex = CHROMATIC.indexOf(target)
-      if (targetIndex === -1) continue
-      const diff = (targetIndex - templateIndex + 12) % 12
-      result[target] = transpose(shape, diff)
-    }
+export const chordDb: Record<string, Record<string, string>> = {
+  guitar: {
+    'C': 'x,3,2,0,1,0', 'Cm': 'x,3,5,5,4,3',
+    'D': 'x,x,0,2,3,2', 'Dm': 'x,x,0,2,3,1',
+    'E': '0,2,2,1,0,0', 'Em': '0,2,2,0,0,0',
+    'F': '1,3,3,2,1,1', 'Fm': '1,3,3,1,1,1',
+    'G': '3,2,0,0,0,3', 'Gm': '3,5,5,3,3,3',
+    'A': 'x,0,2,2,2,0', 'Am': 'x,0,2,2,1,0',
+    'B': 'x,2,4,4,4,2', 'Bm': 'x,2,4,4,3,2',
+    'C#': 'x,4,6,6,6,4', 'C#m': 'x,4,6,6,5,4',
+    'D#': 'x,6,8,8,8,6', 'D#m': 'x,6,8,8,7,6',
+    'F#': '2,4,4,3,2,2', 'F#m': '2,4,4,2,2,2',
+    'G#': '4,6,6,5,4,4', 'G#m': '4,6,6,4,4,4',
+    'A#': 'x,1,3,3,3,1', 'A#m': 'x,1,3,3,2,1',
+    'Db': 'x,4,6,6,6,4', 'Dbm': 'x,4,6,6,5,4',
+    'Eb': 'x,6,8,8,8,6', 'Ebm': 'x,6,8,8,7,6',
+    'Gb': '2,4,4,3,2,2', 'Gbm': '2,4,4,2,2,2',
+    'Ab': '4,6,6,5,4,4', 'Abm': '4,6,6,4,4,4',
+    'Bb': 'x,1,3,3,3,1', 'Bbm': 'x,1,3,3,2,1',
+    'C7': 'x,3,2,3,1,0', 'D7': 'x,x,0,2,1,2', 'E7': '0,2,0,1,0,0', 'F7': '1,3,1,2,1,1', 'G7': '3,2,0,0,0,1', 'A7': 'x,0,2,0,2,0', 'B7': 'x,2,1,2,0,2',
+    'Bdim': 'x,2,3,4,3,x', 'Cdim': 'x,x,1,2,1,2', 'C#dim': 'x,x,2,3,2,3',
+    'Ddim': 'x,x,0,1,3,1', 'D#dim': 'x,x,1,2,4,2', 'Edim': 'x,x,2,3,5,3',
+    'Fdim': 'x,x,3,4,6,4', 'F#dim': '2,x,1,2,1,x', 'Gdim': '3,x,2,3,2,x',
+    'G#dim': '4,x,3,4,3,x', 'Adim': 'x,0,1,2,1,2', 'A#dim': 'x,1,2,3,2,3'
+  },
+  cavaco: {
+    'C': '2,0,1,2', 'Cm': '1,0,1,1',
+    'D': '4,2,3,4', 'Dm': '3,2,3,3',
+    'E': '1,4,0,2', 'Em': '0,0,0,2',
+    'F': '3,2,1,3', 'Fm': '1,1,1,3',
+    'G': '5,4,3,5', 'Gm': '0,3,3,5',
+    'A': '2,2,2,2', 'Am': '2,2,1,2',
+    'B': '4,4,4,4', 'Bm': '4,4,3,4',
+    'C#': '3,1,2,3', 'C#m': '2,1,2,2',
+    'D#': '5,3,4,5', 'D#m': '4,3,4,4',
+    'F#': '4,3,2,4', 'F#m': '2,2,2,4',
+    'G#': '6,5,4,6', 'G#m': '1,4,4,6',
+    'A#': '3,3,3,3', 'A#m': '3,3,2,3',
+    'Db': '3,1,2,3', 'Dbm': '2,1,2,2',
+    'Eb': '5,3,4,5', 'Ebm': '4,3,4,4',
+    'Gb': '4,3,2,4', 'Gbm': '2,2,2,4',
+    'Ab': '6,5,4,6', 'Abm': '1,4,4,6',
+    'Bb': '3,3,3,3', 'Bbm': '3,3,2,3',
+    'C7': '2,2,1,2', 'D7': '0,2,1,2', 'E7': '1,1,3,0', 'F7': '2,2,4,1', 'G7': '0,0,0,3', 'A7': '2,0,2,2', 'B7': '4,2,4,4',
+    'Bdim': '1,1,0,0', 'Cdim': '2,2,1,1', 'C#dim': '3,3,2,2',
+    'Ddim': '0,1,0,0', 'D#dim': '1,2,1,1', 'Edim': '2,3,2,2',
+    'Fdim': '3,4,3,3', 'F#dim': '4,5,4,4', 'Gdim': '2,3,2,2',
+    'G#dim': '0,1,0,0', 'Adim': '1,2,1,1', 'A#dim': '2,3,2,2'
   }
-  return result
-}
-
-const ALL_NOTES = CHROMATIC
-
-export const chordDb: Record<string, { guitar: number[]; cavaco: number[] }> = {}
-
-function addSet(
-  suffix: string,
-  guitarTemplates: Record<string, number[]>,
-  cavacoTemplates: Record<string, number[]>,
-) {
-  const guitarMap = findAllInKey(guitarTemplates, ALL_NOTES)
-  const cavacoMap = findAllInKey(cavacoTemplates, ALL_NOTES)
-
-  for (const note of ALL_NOTES) {
-    const key = `${note}${suffix}`
-    const gShape = guitarMap[note]
-    const cShape = cavacoMap[note]
-    if (gShape || cShape) {
-      chordDb[key] = {
-        guitar: gShape ?? null as unknown as number[],
-        cavaco: cShape ?? null as unknown as number[],
-      }
-    }
-  }
-}
-
-addSet('', GUITAR_MAJOR_TEMPLATE, CAVACO_MAJOR_TEMPLATE)
-addSet('m', GUITAR_MINOR_TEMPLATE, CAVACO_MINOR_TEMPLATE)
-addSet('7', GUITAR_7TH_TEMPLATE, CAVACO_7TH_TEMPLATE)
+};
 
 export function getChordShape(
-  instrument: 'guitar' | 'cavaco',
+  instrument: string,
   chordName: string,
-): number[] | null {
-  const candidates = [
-    chordName,
-    chordName.replace(/7$/, 'm'),
-    chordName.replace(/maj7$/, ''),
-    chordName.replace(/m7$/, 'm'),
-    chordName.replace(/dim$/, 'm'),
-    chordName.replace(/[^A-G](#|b)?$/, (_m: string, a?: string) => a ?? ''),
-    chordName.match(/^[A-G](#|b)?/)?.[0] ?? '',
-  ]
+): string | null {
+  const direct = chordDb[instrument]?.[chordName];
+  if (direct) return direct;
 
-  for (const key of candidates) {
-    const entry = chordDb[key]
-    if (entry) {
-      const shape = entry[instrument]
-      if (shape && shape.length > 0) {
-        return shape
-      }
-      if (shape === null) entry[instrument] = instrument === 'guitar' ? [0, 0, 0, 0, 0, 0] : [0, 0, 0, 0]
-    }
-  }
-
-  return null
+  const fallback = chordName.replace(/m7$/, "m");
+  return fallback !== chordName
+    ? (chordDb[instrument]?.[fallback] ?? null)
+    : null;
 }

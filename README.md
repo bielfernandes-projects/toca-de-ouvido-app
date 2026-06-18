@@ -1,6 +1,6 @@
-# Toca de Ouvido App
+# Qual o Tom App
 
-App utilitário para músicos — calcula o campo harmônico de qualquer tom e exibe progressões de acordes.
+App utilitário para músicos — calcula o campo harmônico de qualquer tom e exibe progressões de acordes com diagramas para Violão e Cavaco.
 
 ## Stack
 
@@ -22,17 +22,22 @@ Abra [http://localhost:3000](http://localhost:3000).
 ## Funcionalidades
 
 - Seletor de tom (7 notas × 2 acidentes × 2 modos)
+- Seletor de instrumento (Violão / Cavaco)
 - Campo harmônico com 7 graus e acordes reativos
-- Progressões de acordes que se adaptam ao tom selecionado
-- Diagramas placeholder para cada acorde
-- Layout responsivo (mobile + desktop com anúncios laterais)
+- Diagramas SVG profissionais para cada acorde
+- Toggle para exibir/ocultar diagramas
+- Progressões de acordes por gênero musical brasileiro (Samba, Sertanejo, Sofrência, Brega, Rock, Reggae)
+- Layout responsivo mobile-first com dark mode
+- Anúncios laterais (desktop) e banners (mobile)
 
 ## Estrutura
 
 ```
 src/
-  app/              — páginas e layout
-  lib/              — lógica de domínio (mockData, musicEngine)
+  app/              — páginas, layout, manifest PWA
+  components/       — ChordDiagram (SVG)
+  lib/              — lógica de domínio (mockData, musicEngine, chordDb)
+  public/           — favicons, logo
 docs/               — documentação e changelog
 ```
 
