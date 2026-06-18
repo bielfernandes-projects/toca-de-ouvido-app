@@ -2,6 +2,12 @@
 
 Todas as alterações notáveis neste projeto serão documentadas aqui.
 
+## [0.4.1] — 18/06/2026
+
+### Corrigido
+- Layout das progressões no desktop: cartas agora empilham verticalmente em vez de lado a lado
+- Favicon.ico copiado para `app/` para resolução do favicon em produção (Next.js file-based convention)
+
 ## [0.4.0] — 18/06/2026
 
 ### Adicionado

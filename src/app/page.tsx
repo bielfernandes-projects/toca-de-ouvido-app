@@ -161,11 +161,11 @@ export default function Home() {
         {progressions.length > 0 && (
           <section className="flex w-full flex-col gap-10">
             <h2 className="text-lg font-semibold text-zinc-300">Progressões</h2>
-            <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="flex w-full flex-col gap-8">
               {progressions.map((prog) => (
                 <div
                   key={prog.name}
-                  className="flex w-full flex-1 flex-col gap-4 rounded-xl bg-zinc-900 p-5"
+                  className="flex w-full flex-col gap-4 rounded-xl bg-zinc-900 p-5"
                 >
                   <h3 className="text-base font-semibold text-zinc-200">
                     {prog.name}
