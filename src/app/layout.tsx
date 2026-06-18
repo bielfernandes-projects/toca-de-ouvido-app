@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import Script from "next/script";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { Providers } from "./providers";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -54,6 +54,7 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <Script
@@ -64,11 +65,14 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>
+        <Providers>
           {children}
           <Analytics />
-        </ThemeProvider>
-      </body>
+        </Providers>
+      {process.env.NODE_ENV === "development" && (
+        <script src="http://localhost:8400/live.js" />
+      )}
+</body>
     </html>
   );
 }

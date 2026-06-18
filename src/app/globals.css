@@ -1,12 +1,24 @@
 @import "tailwindcss";
 
-:root {
+.light {
+  --background: #f5f5f0;
+  --foreground: #18181b;
+  --card-bg: #ffffff;
+  --card-text: #71717a;
+  --border-color: #e4e4e7;
+  --text-tracking: 0;
+}
+
+.dark {
   --background: #09090b;
   --foreground: #fafafa;
   --card-bg: #18181b;
   --card-text: #a1a1aa;
   --border-color: #27272a;
+  --text-tracking: 0.005em;
 }
+
+@variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
@@ -21,4 +33,41 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  letter-spacing: var(--text-tracking);
+}
+
+button:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+button:not(.toggle-switch):hover {
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.25);
+}
+
+.chord-diagram {
+  border-radius: 0.375rem;
+  transition: box-shadow 0.15s ease;
+}
+
+.chord-diagram:hover {
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.3);
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-modal-overlay {
+  animation: modal-fade-in 0.15s ease-out;
+}
+
+.animate-modal-card {
+  animation: modal-scale-in 0.2s ease-out;
 }

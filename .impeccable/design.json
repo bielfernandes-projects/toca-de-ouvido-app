@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-18T00:00:00.000Z",
+  "title": "Design System: Qual o Tom App",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Laranja Queimado", "canonical": "oklch(0.7 0.18 45)", "tonalRamp": ["oklch(0.15 0.04 45)", "oklch(0.25 0.08 45)", "oklch(0.35 0.12 45)", "oklch(0.45 0.15 45)", "oklch(0.55 0.17 35)", "oklch(0.7 0.18 45)", "oklch(0.8 0.13 45)", "oklch(0.9 0.06 45)"] },
+      "primary-deep": { "role": "primary", "displayName": "Laranja Queimado Profundo", "canonical": "oklch(0.55 0.17 35)", "tonalRamp": ["oklch(0.15 0.04 35)", "oklch(0.25 0.08 35)", "oklch(0.35 0.12 35)", "oklch(0.45 0.15 35)", "oklch(0.55 0.17 35)", "oklch(0.65 0.15 35)", "oklch(0.75 0.1 35)", "oklch(0.85 0.05 35)"] },
+      "neutral-bg": { "role": "neutral", "displayName": "Fundo Escuro", "canonical": "oklch(0.03 0.003 280)", "tonalRamp": ["oklch(0.01 0.001 280)", "oklch(0.03 0.003 280)", "oklch(0.05 0.004 280)", "oklch(0.08 0.005 280)", "oklch(0.12 0.006 280)", "oklch(0.18 0.008 280)", "oklch(0.25 0.01 280)", "oklch(0.35 0.015 280)"] },
+      "neutral-bg-alt": { "role": "neutral", "displayName": "Fundo Claro", "canonical": "oklch(0.97 0.008 90)", "tonalRamp": ["oklch(0.85 0.02 90)", "oklch(0.88 0.015 90)", "oklch(0.91 0.012 90)", "oklch(0.93 0.01 90)", "oklch(0.95 0.01 90)", "oklch(0.97 0.008 90)", "oklch(0.98 0.005 90)", "oklch(0.99 0.002 90)"] },
+      "neutral-card": { "role": "neutral", "displayName": "Card Dark", "canonical": "oklch(0.1 0.005 280)", "tonalRamp": ["oklch(0.03 0.003 280)", "oklch(0.06 0.005 280)", "oklch(0.1 0.005 280)", "oklch(0.14 0.008 280)", "oklch(0.18 0.01 280)", "oklch(0.22 0.01 280)", "oklch(0.28 0.012 280)", "oklch(0.35 0.015 280)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Título principal da página (h1), apenas no header." },
+      "title": { "displayName": "Title", "purpose": "Nomes das progressões e cabeçalhos de seção (h2/h3)." },
+      "body": { "displayName": "Body", "purpose": "Nomes dos acordes, botões, texto geral." },
+      "label": { "displayName": "Label", "purpose": "Labels de instrumento, textos auxiliares." }
+    },
+    "shadows": [
+      { "name": "card-light", "value": "0 1px 2px rgba(0,0,0,0.05)", "purpose": "Sombra sutil em cartões apenas no light mode." }
+    ],
+    "motion": [
+      { "name": "ease-state", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Easing padrão para transições de estado (hover, toggle)." },
+      { "name": "duration-state", "value": "150ms", "purpose": "Duração padrão para transições de estado." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Botão de nota/acidental/modo selecionado. Fundo Laranja Queimado, texto branco.",
+      "html": "<button class=\"ds-btn-primary\">C</button>",
+      "css": ".ds-btn-primary { background: #f97316; color: #fff; height: 48px; padding: 0 24px; border: none; border-radius: 12px; font-family: Geist, system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-primary:hover { background: #c2410c; } .ds-btn-primary:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; }"
+    },
+    {
+      "name": "Inactive Button (Dark)",
+      "kind": "button",
+      "refersTo": "button-inactive-dark",
+      "description": "Botão não selecionado em dark mode.",
+      "html": "<button class=\"ds-btn-inactive-dark\">C</button>",
+      "css": ".ds-btn-inactive-dark { background: #18181b; color: #d4d4d8; height: 48px; padding: 0 24px; border: none; border-radius: 12px; font-family: Geist, system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-inactive-dark:hover { background: #3f3f46; } .ds-btn-inactive-dark:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; }"
+    },
+    {
+      "name": "Inactive Button (Light)",
+      "kind": "button",
+      "refersTo": "button-inactive-light",
+      "description": "Botão não selecionado em light mode.",
+      "html": "<button class=\"ds-btn-inactive-light\">C</button>",
+      "css": ".ds-btn-inactive-light { background: #e4e4e7; color: #52525b; height: 48px; padding: 0 24px; border: none; border-radius: 12px; font-family: Geist, system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-inactive-light:hover { background: #d4d4d8; } .ds-btn-inactive-light:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; }"
+    },
+    {
+      "name": "Toggle Switch",
+      "kind": "button",
+      "refersTo": "toggle-track-on",
+      "description": "Toggle 'Mostrar Diagramas' no estado ON (Laranja Queimado).",
+      "html": "<button class=\"ds-toggle\" role=\"switch\" aria-checked=\"true\"><span class=\"ds-toggle-thumb\"></span></button>",
+      "css": ".ds-toggle { position: relative; width: 44px; height: 24px; background: #f97316; border-radius: 9999px; border: none; cursor: pointer; transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1); padding: 0; } .ds-toggle-thumb { position: absolute; left: 2px; top: 2px; width: 20px; height: 20px; background: #fff; border-radius: 9999px; transform: translateX(20px); transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-toggle:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; }"
+    },
+    {
+      "name": "Progression Card (Dark)",
+      "kind": "card",
+      "refersTo": "card-dark",
+      "description": "Card de progressão em dark mode.",
+      "html": "<div class=\"ds-card-dark\"><h3 class=\"ds-card-title\">Samba</h3><p class=\"ds-card-numerals\">I - IV - V - I</p><div class=\"ds-card-chords\"><span>C</span><span>F</span><span>G</span><span>C</span></div></div>",
+      "css": ".ds-card-dark { background: #18181b; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px; } .ds-card-title { color: #e4e4e7; font-family: Geist, system-ui, sans-serif; font-size: 1.125rem; font-weight: 600; line-height: 1.3; margin: 0; } .ds-card-numerals { color: #a1a1aa; font-size: 0.75rem; margin: 0; } .ds-card-chords { display: flex; gap: 16px; flex-wrap: wrap; } .ds-card-chords span { color: #fafafa; font-size: 1rem; font-weight: 700; }"
+    },
+    {
+      "name": "Progression Card (Light)",
+      "kind": "card",
+      "refersTo": "card-light",
+      "description": "Card de progressão em light mode.",
+      "html": "<div class=\"ds-card-light\"><h3 class=\"ds-card-title-light\">Samba</h3><p class=\"ds-card-numerals-light\">I - IV - V - I</p><div class=\"ds-card-chords-light\"><span>C</span><span>F</span><span>G</span><span>C</span></div></div>",
+      "css": ".ds-card-light { background: #ffffff; border: 1px solid #e4e4e7; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); } .ds-card-title-light { color: #18181b; font-family: Geist, system-ui, sans-serif; font-size: 1.125rem; font-weight: 600; line-height: 1.3; margin: 0; } .ds-card-numerals-light { color: #71717a; font-size: 0.75rem; margin: 0; } .ds-card-chords-light { display: flex; gap: 16px; flex-wrap: wrap; } .ds-card-chords-light span { color: #18181b; font-size: 1rem; font-weight: 700; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Mapa do Tom",
+    "overview": "O Qual o Tom App é uma ferramenta de consulta e aprendizado musical — um mapa do campo harmônico que o usuário explora para encontrar o tom certo, visualizar acordes no braço do instrumento e descobrir progressões. A atmosfera visual mescla dois mundos: a noite de ensaio (dark mode — acolhedor, sem distrações, como um estúdio à meia-luz) e a sala de aula musical (light mode — didático, limpo, como um quadro com giz). O design segue o princípio 'ferramenta, não brinquedo': cada elemento serve à tarefa. Não há decoração gratuita. A interface desaparece quando o usuário está imerso na descoberta musical.",
+    "keyCharacteristics": [
+      "Escuro acolhedor por padrão, claro didático como alternativa",
+      "Um único acento (Laranja Queimado) aplicado com parcimônia — apenas para estado ativo e ação primária",
+      "Superfícies planas com separação por bordas e tons, não por sombras profundas",
+      "Tipografia limpa e geométrica (Geist), sem serifa display",
+      "Diagramas de acordes inline em SVG, fiéis ao braço do instrumento"
+    ],
+    "rules": [
+      { "name": "The Single Accent Rule", "body": "O Laranja Queimado é o único acento. Não há cor secundária. Ele aparece exclusivamente em: elementos ativos/selecionados, toggle ligado, dots de diagrama, hover de link. Nunca como decoração.", "section": "colors" },
+      { "name": "The Two-Regime Rule", "body": "Toda cor neutra tem um par dark/light. O tema é controlado pelo usuário via toggle; não há modo automático.", "section": "colors" },
+      { "name": "The One-Family Rule", "body": "Nunca usar uma segunda fonte display. Geist serve para tudo — títulos, botões, labels, corpo. A hierarquia é feita por peso e tamanho, não por troca de família.", "section": "typography" },
+      { "name": "The Flat-by-Default Rule", "body": "Superfícies são planas em repouso. Nenhuma sombra em dark mode. No light mode, sombras são sutis (shadow-sm) e apenas em cartões. Jamais usar sombras em botões ou elementos interativos.", "section": "elevation" }
+    ],
+    "dos": [
+      "Usar Laranja Queimado com parcimônia — apenas para estado ativo e ações primárias.",
+      "Manter o fundo escuro por padrão (dark mode é o regime principal do 'noite de ensaio').",
+      "Usar Geist em toda a interface — uma família, sem pairing.",
+      "Preferir separação por borda fina (1px) e tom sobre sombra.",
+      "Colocar aria-label em todo diagrama de acorde e botão de toggle.",
+      "Usar text-wrap: balance em títulos (h1-h3) para linhas equilibradas."
+    ],
+    "donts": [
+      "Adicionar uma segunda cor de acento. Laranja Queimado é o único.",
+      "Usar gradientes, glassmorphism, sombras profundas, ou qualquer decoração que não sirva à tarefa.",
+      "Animar entrada de página ou progressões orquestradas. O app carrega numa tarefa.",
+      "Usar sombras em elementos interativos (botões, toggles) — apenas cartões no light mode.",
+      "Usar fonte display decorativa ou serifada para títulos. Geist é a única.",
+      "Ultrapassar 75ch de largura de linha no texto corrido (footer, privacy policy).",
+      "Usar cards aninhados. Um card por progressão, sem sub-cards."
+    ]
+  }
+}

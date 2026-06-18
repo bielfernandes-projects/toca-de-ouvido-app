@@ -51,7 +51,7 @@ export default function ChordDiagram({ instrument, chordName, light }: Props) {
 
   if (!shape) {
     return (
-      <div className={`w-24 h-32 ${c.fallbackBg} border ${c.fallbackBorder} flex flex-col items-center justify-center text-center p-2 rounded-md`}>
+      <div className={`chord-diagram w-24 h-32 ${c.fallbackBg} border ${c.fallbackBorder} flex flex-col items-center justify-center text-center p-2`}>
         <span className={`${c.fallbackText} text-xs mb-1`}>Diagrama não mapeado</span>
         <span className={`font-bold ${c.fallbackChord}`}>{chordName}</span>
       </div>
@@ -80,9 +80,10 @@ export default function ChordDiagram({ instrument, chordName, light }: Props) {
   const label = `Diagrama de acorde ${chordName} para ${instrument === "guitar" ? "violão" : "cavaco"}`
 
   return (
+    <div className="chord-diagram w-24 h-32 shrink-0">
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      className="w-24 h-32 shrink-0"
+      className="w-full h-full"
       role="img"
       aria-label={label}
     >
@@ -98,7 +99,7 @@ export default function ChordDiagram({ instrument, chordName, light }: Props) {
       {startFret > 1 && (
         <text
           x={PAD - 3}
-          y={TOP + FRET_H * 0.65}
+          y={TOP - 4}
           textAnchor="end"
           fontSize={9}
           fontWeight={600}
@@ -174,7 +175,7 @@ export default function ChordDiagram({ instrument, chordName, light }: Props) {
               key={`m-${i}`}
               cx={x}
               cy={y}
-              r={5.5}
+              r={4.5}
               fill={c.dot}
             />
           )
@@ -183,5 +184,6 @@ export default function ChordDiagram({ instrument, chordName, light }: Props) {
         return null
       })}
     </svg>
+    </div>
   )
 }
